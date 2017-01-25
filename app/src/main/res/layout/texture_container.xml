@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:camera="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.jamieyao.cameray.Camera.TextureView.MyTextureView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/texture_view"/>
+
+    <com.jamieyao.cameray.Camera.ui.AnimTmpView
+        android:id="@+id/anim_image"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:visibility="gone"/>
+
+
+    <com.jamieyao.cameray.Camera.ui.FocusView
+        android:id="@+id/focusImageView"
+        android:layout_width="75dip"
+        android:layout_height="75dip"
+        camera:focus_focusing_id="@drawable/focus_focusing"
+        camera:focus_success_id="@drawable/focus_focused"
+        camera:focus_fail_id="@drawable/focus_focus_failed" />
+
+    <TextView
+        android:id="@+id/recordTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginRight="25dip"
+        android:layout_marginTop="25dip"
+        android:drawableLeft="@drawable/icon_rec"
+        android:drawablePadding="8dip"
+        android:textColor="#ffffffff"
+        android:textSize="20sp"
+        android:visibility="gone" />
+
+</RelativeLayout>

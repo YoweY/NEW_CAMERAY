@@ -1,0 +1,96 @@
+package com.jamieyao.cameray.Camera.ui;
+
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.hardware.Camera;
+import android.util.AttributeSet;
+import android.util.Log;
+import android.widget.RelativeLayout;
+
+import com.jamieyao.cameray.Camera.SurfaceView.MySurfaceView;
+import com.jamieyao.cameray.Camera.TempImageView;
+import com.jamieyao.cameray.R;
+import com.jamieyao.cameray.Util.StorageUtil;
+
+/**
+ * Created by jamie.yao_cp on 2017/1/6.
+ */
+
+public class SurfaceContainer extends RelativeLayout {
+    public final static String TAG="CameraContainer";
+
+    public MySurfaceView mSurfaceView;
+    private TempImageView mTempImageView;
+    TakePictureListener mListener;
+
+    public static interface TakePictureListener{
+        /**
+         *拍照结束执行的动作，该方法会在onPictureTaken函数执行后触发
+         *  @param bm 拍照生成的图片
+         */
+        public void onTakePictureEnd(Bitmap bm);
+
+        /**  临时图片动画结束后触发
+         * @param bm 拍照生成的图片
+         * @param isVideo true：当前为录像缩略图 false:为拍照缩略图
+         * */
+        public void onAnimtionEnd(Bitmap bm,boolean isVideo);
+    }
+
+    public SurfaceContainer(Context context) {
+        super(context);
+        inflate(context, R.layout.surface_container, this);
+        mSurfaceView=(MySurfaceView) findViewById(R.id.surface_view);
+        mTempImageView=(TempImageView) findViewById(R.id.temp_image);
+    }
+
+    public SurfaceContainer(Context context, AttributeSet attrs) {
+        super(context, attrs);
+        inflate(context, R.layout.surface_container, this);
+        mSurfaceView=(MySurfaceView) findViewById(R.id.surface_view);
+        mTempImageView=(TempImageView) findViewById(R.id.temp_image);
+    }
+
+
+    public void switchCamera(){
+        mSurfaceView.switchCamera();
+    }
+
+
+    public void takePicture(TakePictureListener listener){
+        this.mListener=listener;
+        mSurfaceView.takePicture(pictureCallback);
+    }
+
+
+    private final Camera.PictureCallback pictureCallback=new Camera.PictureCallback() {
+
+        @Override
+        public void onPictureTaken(byte[] data, Camera camera) {
+
+            Bitmap tmp = null;
+            Bitmap rotaBitmap = null;
+            if(null != data){
+                tmp = BitmapFactory.decodeByteArray(data, 0, data.length);
+                rotaBitmap = getRotateBitmap(tmp, 90.0f);
+                StorageUtil.saveBitmap(rotaBitmap);
+            }
+            mTempImageView.setListener(mListener);
+            mTempImageView.isVideo(false);
+            mTempImageView.setImageBitmap(rotaBitmap);
+            //mTempImageView.startAnimation(R.anim.tempview_show);
+            //重新打开预览图，进行下一次的拍照准备
+            camera.startPreview();
+            if(mListener!=null) mListener.onTakePictureEnd(rotaBitmap);
+        }
+    };
+
+    public static Bitmap getRotateBitmap(Bitmap b, float rotateDegree){
+        Matrix matrix = new Matrix();
+        matrix.postRotate((float)rotateDegree);
+        Bitmap rotaBitmap = Bitmap.createBitmap(b, 0, 0, b.getWidth(), b.getHeight(), matrix, false);
+        return rotaBitmap;
+    }
+}

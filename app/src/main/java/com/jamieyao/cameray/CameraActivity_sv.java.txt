@@ -1,0 +1,59 @@
+package com.jamieyao.cameray;
+
+import android.app.Activity;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.hardware.Camera;
+import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.ImageButton;
+
+import com.jamieyao.cameray.Camera.SurfaceView.MySurfaceView;
+import com.jamieyao.cameray.Camera.ui.SurfaceContainer;
+import com.jamieyao.cameray.Util.StorageUtil;
+
+
+public class CameraActivity_sv extends AppCompatActivity {
+
+    private SurfaceContainer svContainer;
+    private ImageButton mButton;
+
+    MySurfaceView mySurfaceView;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        requestWindowFeature(Window.FEATURE_NO_TITLE);
+        getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN,
+                WindowManager.LayoutParams.FLAG_FULLSCREEN);
+        setContentView(R.layout.main);
+
+        svContainer = (SurfaceContainer)findViewById(R.id.texture_container);//surface_container
+        mButton = (ImageButton)findViewById(R.id.btn_shutter_camera);//btn_shutter
+        mButton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                svContainer.takePicture(null);
+            }
+        });
+    }
+
+
+
+
+            SurfaceContainer.TakePictureListener  tpListener = new SurfaceContainer.TakePictureListener()
+    {
+        @Override
+        public void onAnimtionEnd(Bitmap bm, boolean isVideo) {
+
+        }
+
+        @Override
+        public void onTakePictureEnd(Bitmap bm) {
+
+        }
+    };
+}

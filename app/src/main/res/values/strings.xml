@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">CameraY</string>
+
+    <string name="camera_id_back_desc">Back camera</string>
+    <string name="camera_id_front_desc">Front camera</string>
+
+</resources>
